@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>서울관광재단 인사팀 통합시스템</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<style>
+  :root{
+    --ink:#17233A; --muted:#5E6B82; --bg:#F5F7FA; --card:#FFFFFF;
+    --line:#E3E8F0; --blue:#0F5FCC; --blue-soft:#EAF1FC;
+    --ok:#0E8A4C; --ok-soft:#E7F5EE; --wait:#8A6D0E; --wait-soft:#F7F1DE;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    font-family:"Pretendard","Noto Sans KR",-apple-system,sans-serif;
+    background:var(--bg); color:var(--ink); min-height:100vh;
+    display:flex; flex-direction:column;
+  }
+.wrap{width:100%; max-width:880px; margin:0 auto; padding:0 24px 120px; flex:1;
+    display:flex; flex-direction:column; justify-content:center}
+
+  header{padding:0 0 36px; text-align:center}
+  h1{font-size:clamp(28px,5vw,40px); font-weight:800; letter-spacing:-.02em; line-height:1.2}
+  .sub{margin-top:12px; font-size:15px; color:var(--muted); line-height:1.6}
+
+  .grid{display:grid; grid-template-columns:repeat(3,1fr); gap:14px}
+  @media (max-width:760px){ .grid{grid-template-columns:1fr 1fr} }
+  @media (max-width:520px){ .grid{grid-template-columns:1fr} .wrap{padding:32px 24px} }
+
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:14px;
+    padding:22px 20px 18px; text-decoration:none; color:inherit;
+    display:flex; flex-direction:column; gap:10px; position:relative;
+    transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+  }
+  .card:hover{transform:translateY(-3px); box-shadow:0 10px 28px rgba(23,35,58,.08); border-color:#C9D6EA}
+  .card:focus-visible{outline:3px solid var(--blue); outline-offset:2px}
+  .card.disabled{pointer-events:none; opacity:.62}
+
+  .card-top{display:flex; align-items:center; justify-content:space-between; gap:8px}
+  .card h2{font-size:16px; font-weight:700; letter-spacing:-.01em}
+  .card p{font-size:14px; color:var(--muted); line-height:1.6; flex:1}
+  .card .go{
+    font-size:13px; font-weight:600; color:var(--blue); margin-top:6px;
+    display:inline-flex; align-items:center; gap:4px;
+  }
+  .card:hover .go .arrow{transform:translateX(3px)}
+  .go .arrow{transition:transform .15s ease}
+
+  .badge{
+    font-size:12px; font-weight:600; padding:3px 9px; border-radius:99px; white-space:nowrap;
+  }
+  .badge.ok{background:var(--ok-soft); color:var(--ok)}
+  .badge.wait{background:var(--wait-soft); color:var(--wait)}
+
+  footer{
+    border-top:1px solid var(--line); background:var(--card);
+    font-size:13px; color:var(--muted);
+  }
+  
+footer .wrap{display:flex; flex-direction:row; justify-content:center; gap:12px; padding:18px 24px; flex-wrap:wrap}
+
+  @media (prefers-reduced-motion:reduce){
+    .card, .go .arrow{transition:none}
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>✨️서울관광재단 인사팀✨️</h1>
+      <p class="sub">서울관광재단 인사팀에서 운영하는 업무 도구 모음입니다.<br>이용할 서비스를 선택하세요.</p>
+    </header>
+
+    <main class="grid" id="cards"></main>
+  </div>
+
+  <footer>
+    <div class="wrap">
+      <span>기획경영본부 인사팀 · 내부 전용 · 사내망/VPN에서만 접속됩니다</span>
+    </div>
+  </footer>
+
+<script>
+/* ============================================================
+   새 페이지 추가 방법:
+   아래 TOOLS 배열에 { } 한 덩어리를 복사해 붙이고
+   name(이름), desc(설명), href(파일명), status를 바꾸면 끝.
+   status: "ok" = 운영중 / "wait" = 준비중(클릭 안 됨)
+   ============================================================ */
+const TOOLS = [
+  {
+    name: "국외출장 마일리지 관리",
+    desc: "국외출장 마일리지 적립·사용 현황 조회",
+    href: "mileage.html",
+    status: "ok"
+  },
+  {
+    name: "출장 여비 계산기",
+    desc: "출장 도시 등급에 따른 여비 계산",
+    href: "budgetcal.html",
+    status: "ok"
+  },
+  {
+    name: "교육 현황",
+    desc: "필수 교육 이수 현황 확인",
+    href: "edu.html",
+    status: "ok"
+  }
+];
+
+const STATUS_LABEL = { ok: "운영중", wait: "준비중" };
+
+document.getElementById("cards").innerHTML = TOOLS.map(t => `
+  <a class="card${t.status === "wait" ? " disabled" : ""}" href="${t.href}"
+     ${t.status === "wait" ? 'aria-disabled="true" tabindex="-1"' : ""}>
+    <div class="card-top">
+      <h2>${t.name}</h2>
+      <span class="badge ${t.status}">${STATUS_LABEL[t.status]}</span>
+    </div>
+    <p>${t.desc}</p>
+    <span class="go">바로가기 <span class="arrow">→</span></span>
+  </a>
+`).join("");
+</script>
+</body>
+</html>
