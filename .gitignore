@@ -1,0 +1,7 @@
+# 데이터/민감정보 실수 커밋 방지
+*.xlsx
+*.csv
+*비밀번호*
+*password*
+Thumbs.db
+.DS_Store
